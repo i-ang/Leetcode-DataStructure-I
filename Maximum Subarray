@@ -1,0 +1,51 @@
+class Solution:
+    def maxSubArray(self, nums: List[int]) -> int:
+
+        #using Divide and Conquer
+        def maxFind(arr, left, right):
+            #if single integer in array
+            if left == right:
+                return arr[left]
+
+            #find mid-point of the array. try floor()?
+            mid = (left + right) // 2
+
+            #sum the left hand array, from the middle down
+            maxLeftSum = -sys.maxsize
+            curLeft = 0
+            for x in range(mid, left-1,-1):
+                curLeft+=arr[x]
+                if curLeft > maxLeftSum:
+                    maxLeftSum = curLeft
+
+            #sum the right hand array, excluding the middle
+            maxRightSum = -sys.maxsize
+            curRight = 0
+            for y in range(mid+1,right+1):
+                curRight+=arr[y]
+                if curRight > maxRightSum:
+                    maxRightSum = curRight
+
+            #recursively find the max of left and right
+            maxLeftRight = max(maxFind(arr,left,mid), maxFind(arr,mid+1, right))
+
+            #find the max, between the max of either left or right, or through the middle
+            maxCrossing = maxLeftSum + maxRightSum
+            return max(maxLeftRight, maxCrossing)
+
+
+
+
+        return maxFind(nums,0, len(nums)-1)
+
+        #Linear Space apppeared to be much faster than recursive
+        #maxSum = nums[0]
+        #curVal = 0
+
+        #for n in nums:
+        #    if curVal < 0:
+        #        curVal = 0
+        #    curVal+=n
+
+        #    maxSum = max(maxSum, curVal)
+        #return maxSum
